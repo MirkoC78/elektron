@@ -1,0 +1,22 @@
+/* Pagine di prova (non pubblicate nella cartella sito) */
+body { margin: 0; padding: 24px; font: 15px/1.5 'Segoe UI', system-ui, sans-serif; background: #E7E9EC; color: #18202B; }
+h1 { font-size: 24px; margin: 0 0 8px; }
+h2 { font-size: 20px; margin: 0 0 4px; }
+.lede { max-width: 70ch; margin: 0 0 24px; color: #4A5562; }
+.char { background: #FFFFFF; border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+.char > p { max-width: 70ch; margin: 0 0 12px; color: #4A5562; }
+.moods { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+.moods.dark { margin-top: 12px; padding: 12px; border-radius: 12px; background: #11151B; }
+figure { margin: 0; display: grid; justify-items: center; gap: 4px; }
+figcaption { font-size: 13px; color: #4A5562; }
+.busts { grid-template-columns: repeat(3, auto); align-items: end; }
+.busts figcaption { grid-column: 1 / -1; }
+.frames { display: flex; gap: 24px; overflow-x: auto; padding-bottom: 12px; }
+.frame { flex: none; display: grid; gap: 8px; align-content: start; }
+.frame h2 { font-size: 17px; }
+.frame p { margin: 0; min-height: 4.6em; max-width: 360px; font-size: 14px; color: #4A5562; }
+.frame iframe { width: 360px; height: 740px; border: 1px solid #C5CBD3; border-radius: 20px; background: #FFFFFF; }
+.row-label { margin: 28px 0 10px; font-size: 16px; font-weight: 600; }
+.swatches { display: flex; gap: 4px; }
+.swatches i { width: 28px; height: 28px; border-radius: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, 362px); gap: 24px; }
