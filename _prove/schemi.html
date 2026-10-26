@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prove: schemi</title>
+<link rel="stylesheet" href="../src/sch.css">
+<style>
+/* gettoni provvisori, solo per questa pagina di prova (la palette dell'app si sceglie alla tappa 6) */
+:root { --f-ui: system-ui, sans-serif; --bg: #F4F5F7; --ink: #1B2430;
+  --sch-wire: #2A3442; --sch-ink: #1B2430; --sch-fill: #FFFFFF; --sch-text: #1B2430; --sch-muted: #5A6472; --sch-node: #0B5C8A;
+  --sch-cur: #B3261E; --sch-vol: #1F6F3A; --sch-hl: #8A3FFC; --sch-hi: #C2410C; --sch-grid: #D6DAE0; --sch-tr1: #0B5C8A; --sch-tr2: #B3261E; --sch-tr3: #1F6F3A;
+  --scope-bg: #0E1A14; --scope-grid: #2E4A3A; --scope-tr1: #7CFFB0; --scope-tr2: #FFD166; --scope-txt: #CFE9DA; --cc-body: #E9D9B8; }
+body.dark { --bg: #0F141A; --ink: #E6EAEF; --sch-wire: #C9D1DB; --sch-ink: #E6EAEF; --sch-fill: #18202A; --sch-text: #E6EAEF; --sch-muted: #9AA6B4; --sch-node: #7CC4F5;
+  --sch-cur: #FF8A80; --sch-vol: #7EE0A1; --sch-hl: #C9A7FF; --sch-hi: #FFB37A; --sch-grid: #2A3442; --sch-tr1: #7CC4F5; --sch-tr2: #FF8A80; --sch-tr3: #7EE0A1; --cc-body: #CDBB96; }
+body { margin: 0; padding: 16px; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; }
+.grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.box { width: 360px; box-sizing: border-box; padding: 16px; background: var(--sch-fill); border: 1px solid var(--sch-grid); }
+.box h2 { font-size: 13px; margin: 0 0 8px; }
+.box p { font-size: 11px; color: var(--sch-muted); margin: 8px 0 0; }
+</style>
+</head>
+<body>
+<div class="grid" id="g"></div>
+<script src="../src/units.js"></script><script src="../src/cx.js"></script><script src="../src/math.js"></script><script src="../src/circuit.js"></script>
+<script src="../src/logic.js"></script><script src="../src/schematic.js"></script>
+<script src="../src/transient.js"></script><script src="../src/numsys.js"></script><script src="../src/signals.js"></script><script src="../src/gates.js"></script><script src="../src/plots.js"></script><script src="../src/templates.js"></script>
+<script>
+if (location.hash.includes('dark')) document.body.classList.add('dark');
+const S = window.ElekSchematic;
+const r = (id, v, x) => Object.assign({ id, t: 'R', v }, x || {});
+const CASES = [
+  ['Serie', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [r('R3', 330)]], top: [[r('R1', 100), r('R2', 220)]] }, { currents: [{ el: 'R1', label: 'I' }], voltages: [{ el: 'R2', label: 'V_2' }] }],
+  ['Parallelo', { cols: [[{ id: 'V1', t: 'V', v: 9 }], [r('R1', 1000)], [r('R2', 2200)], [r('R3', 4700)]], top: [[], [], []], names: { T1: 'A' } }, { currents: [{ el: 'R1', label: 'I_1' }, { el: 'R2', label: 'I_2' }], voltages: [{ el: 'R3', label: 'V' }] }],
+  ['Mista', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [r('R2', 200)], [r('R3', 300)]], top: [[r('R1', 100)], []], names: { T1: 'A' } }, { highlight: ['R2'] }],
+  ['Partitore con carico', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [r('R2', 1000)], [r('RL', 4700)]], top: [[r('R1', 1000)], []], names: { T1: 'A' } }, { voltages: [{ el: 'RL', label: 'V_L' }] }],
+  ['Due generatori', { cols: [[{ id: 'E1', t: 'V', v: 12 }, r('R1', 100)], [r('R3', 200)], [{ id: 'E2', t: 'V', v: 6 }, r('R2', 300)]], top: [[], []], names: { T1: 'A' } }, { currents: [{ el: 'R3', label: 'I_3' }] }],
+  ['Thevenin', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [r('R2', 2000)], [{ id: 'AB', t: 'OPEN' }]], top: [[r('R1', 1000)], [r('R3', 470)]] }, {}],
+  ['Parallelo nel tratto', { cols: [[{ id: 'V1', t: 'V', v: 24 }], [r('R4', 1000)]], top: [[r('R1', 470), { par: [[r('R2', 1000)], [r('R3', 2200)]] }]] }, {}],
+  ['Trova il guasto', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [r('R2', 1000)], [r('R4', 1000)]], top: [[r('R1', 1000)], [r('R3', 1000)]], names: { T1: 'A', T2: 'B' } }, { nodes: { A: '6,0 V', B: '0 V' } }],
+  ['Componenti', { cols: [[{ id: 'V1', t: 'V', v: 5 }], [{ id: 'D1', t: 'LED' }], [{ id: 'C1', t: 'C', v: 100e-6, pol: true }], [{ id: 'L1', t: 'L', v: 10e-3 }]], top: [[r('R1', 220)], [{ id: 'SW1', t: 'SW' }], []] }, {}],
+  ['Zener', { cols: [[{ id: 'V1', t: 'V', v: 12 }], [{ id: 'DZ1', t: 'DZ', vz: 5.1, rev: true }], [r('RL', 1000)]], top: [[r('R1', 470)], []] }, {}],
+  ['RC con interruttore', { cols: [[{ id: 'E', t: 'V', v: 10, style: 'pila' }], [{ id: 'C1', t: 'C', v: 1e-6 }]], top: [[{ id: 'SW1', t: 'SW', closed: true }, r('R1', 10000)]] }, { voltages: [{ el: 'C1', label: 'v_C' }] }],
+  ['Alternata', { cols: [[{ id: 'V1', t: 'V', v: 230, ac: true }], [{ id: 'C1', t: 'C', v: 10e-6 }]], top: [[r('R1', 100), { id: 'L1', t: 'L', v: 0.1 }]] }, {}],
+  ['Strumenti', { cols: [[{ id: 'V1', t: 'V', v: 9 }], [r('R2', 1000)], [{ id: 'VM1', t: 'VM' }]], top: [[{ id: 'AM1', t: 'AM' }, r('R1', 470)], []] }, {}],
+  ['Generatore di corrente', { cols: [[{ id: 'I1', t: 'I', v: 0.01 }], [r('R1', 1000)], [r('R2', 2000)]], top: [[], []] }, {}],
+];
+const out = [];
+for (const [t, spec, o] of CASES) { const d = S.ladder(spec, o); out.push(`<div class="box"><h2>${t} — ${d.w}×${d.h}</h2>${d.svg}<p>${d.desc}</p></div>`); }
+if (window.ElekGates) for (const html of window.ElekGates.demo()) out.push(`<div class="box">${html}</div>`);
+if (window.ElekPlots) for (const html of window.ElekPlots.demo()) out.push(`<div class="box">${html}</div>`);
+if (window.ElekTemplates && location.hash.includes("modelli")) { out.length = 0; for (const html of window.ElekTemplates.demo()) out.push(`<div class="box">${html}</div>`); }
+document.getElementById('g').innerHTML = out.join('');
+</script>
+</body>
+</html>

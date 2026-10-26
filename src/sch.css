@@ -1,0 +1,67 @@
+/* ELEKTRON — stile degli schemi, dei grafici e degli strumenti (SVG generati da schematic.js, plots.js, gates.js).
+   Solo gettoni: --sch-* sono definiti nei temi in app.css. Nessuna informazione affidata al solo colore:
+   correnti con la freccia piena, tensioni tratteggiate con il segno +, componente evidenziato più spesso e in grassetto. */
+.sch { display: block; max-width: 100%; height: auto; overflow: visible; font-family: var(--f-ui); }
+.sch .sch-w { stroke: var(--sch-wire); stroke-width: 2; stroke-linecap: round; fill: none; }
+.sch .sch-c { stroke: var(--sch-ink); stroke-width: 2; fill: var(--sch-fill); stroke-linejoin: round; }
+.sch .sch-open, .sch .sch-plate { fill: none; }
+.sch .sch-plate { stroke-width: 3; }
+.sch .sch-solid { fill: var(--sch-ink); stroke: none; }
+.sch .sch-dotc, .sch .sch-term { fill: var(--sch-fill); }
+.sch .sch-ah, .sch .sch-ahc { fill: var(--sch-ink); stroke: none; }
+.sch .sch-d { fill: var(--sch-wire); }
+.sch text { font-size: 13px; fill: var(--sch-text); }
+.sch .sch-t { font-weight: 600; }
+.sch .sch-sub { font-size: 10px; }
+.sch .sch-v { font-size: 12px; fill: var(--sch-muted); }
+.sch .sch-s { font-size: 12px; font-weight: 700; fill: var(--sch-ink); }
+.sch .sch-m { font-size: 13px; font-weight: 700; fill: var(--sch-ink); }
+.sch .sch-n { font-size: 13px; font-weight: 700; fill: var(--sch-node); }
+.sch .sch-meas { font-size: 12px; font-weight: 600; fill: var(--sch-node); }
+.sch .sch-g line { stroke: var(--sch-ink); }
+/* corrente: freccia piena sul conduttore */
+.sch .sch-i { fill: var(--sch-cur); stroke: none; }
+.sch .sch-ti { font-size: 12px; font-weight: 700; fill: var(--sch-cur); }
+/* tensione: tratteggio, punta aperta verso il + */
+.sch .sch-u { stroke: var(--sch-vol); stroke-width: 1.6; stroke-dasharray: 4 3; fill: none; }
+.sch .sch-uh { fill: var(--sch-vol); stroke: none; }
+.sch .sch-tu { font-size: 12px; font-weight: 700; fill: var(--sch-vol); font-style: italic; }
+/* componente evidenziato: tratto più spesso e nome in grassetto, oltre al colore */
+.sch .sch-hl .sch-c { stroke: var(--sch-hl); stroke-width: 3.4; }
+.sch .sch-hlt { fill: var(--sch-hl); font-weight: 800; text-decoration: underline; }
+/* porte logiche */
+.sch .sch-gate { stroke: var(--sch-ink); stroke-width: 2; fill: var(--sch-fill); }
+.sch .sch-q { font-size: 14px; font-weight: 700; fill: var(--sch-ink); }
+.sch .sch-hi { stroke: var(--sch-hi); stroke-width: 3; }
+.sch .sch-lo { stroke: var(--sch-wire); stroke-width: 2; stroke-dasharray: 2 3; }
+.sch .sch-bit { font-size: 12px; font-weight: 700; }
+/* grafici */
+.sch .pl-grid { stroke: var(--sch-grid); stroke-width: 1; fill: none; }
+.sch .pl-axis { stroke: var(--sch-muted); stroke-width: 1.4; fill: none; }
+.sch .pl-tr1 { stroke: var(--sch-tr1); stroke-width: 2.4; fill: none; }
+.sch .pl-tr2 { stroke: var(--sch-tr2); stroke-width: 2.4; fill: none; stroke-dasharray: 7 4; }
+.sch .pl-tr3 { stroke: var(--sch-tr3); stroke-width: 2; fill: none; stroke-dasharray: 2 3; }
+.sch .pl-asym { stroke: var(--sch-muted); stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; }
+.sch .pl-mark { stroke: var(--sch-muted); stroke-width: 1; stroke-dasharray: 3 3; fill: none; }
+.sch .pl-lab { font-size: 11px; fill: var(--sch-muted); }
+.sch .pl-key { font-size: 12px; font-weight: 600; }
+.sch .scope-bg { fill: var(--scope-bg); }
+.sch .scope-grid { stroke: var(--scope-grid); stroke-width: 1; }
+.sch .scope-axis { stroke: var(--scope-grid); stroke-width: 1.6; }
+.sch .scope-tr1 { stroke: var(--scope-tr1); stroke-width: 2.4; fill: none; }
+.sch .scope-tr2 { stroke: var(--scope-tr2); stroke-width: 2.4; fill: none; stroke-dasharray: 7 4; }
+.sch .scope-txt { font-size: 12px; fill: var(--scope-txt); font-weight: 600; }
+/* codice colori: ogni banda ha la cifra scritta sotto */
+.sch .cc-body { fill: var(--cc-body); stroke: var(--sch-ink); stroke-width: 1.6; }
+.sch .cc-band { stroke: var(--sch-ink); stroke-width: 0.8; }
+.sch .cc-txt { font-size: 12px; font-weight: 700; fill: var(--sch-text); }
+.sch .cc-sub { font-size: 10px; fill: var(--sch-muted); }
+/* mappa di Karnaugh */
+.sch .km-cell { fill: var(--sch-fill); stroke: var(--sch-muted); stroke-width: 1; }
+.sch .km-val { font-size: 15px; font-weight: 700; fill: var(--sch-text); }
+.sch .km-hd { font-size: 12px; font-weight: 600; fill: var(--sch-muted); }
+.sch .km-g1 { fill: none; stroke: var(--sch-tr1); stroke-width: 2.6; }
+.sch .km-g2 { fill: none; stroke: var(--sch-tr2); stroke-width: 2.6; stroke-dasharray: 7 4; }
+.sch .km-g3 { fill: none; stroke: var(--sch-tr3); stroke-width: 2.6; stroke-dasharray: 2 3; }
+.sch .km-g4 { fill: none; stroke: var(--sch-hl); stroke-width: 2.6; stroke-dasharray: 10 3 2 3; }
+.sch .mm-digits { font-size: 28px; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
