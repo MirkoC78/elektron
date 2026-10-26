@@ -40,7 +40,7 @@
       if (s.startsWith('<=', i) || s.startsWith('>=', i)) { t.push({ k: 'rel', v: c === '<' ? '≤' : '≥' }); i += 2; continue; }
       if (s.startsWith('≤', i) || s.startsWith('≥', i)) { t.push({ k: 'rel', v: c }); i++; continue; }
       if ('=≈≠<>→⇒'.includes(c)) { t.push({ k: 'rel', v: c }); i++; continue; }
-      if ('+-−±·*×/÷^_(){}|∠°\''.includes(c)) { t.push({ k: 'op', v: c === '−' ? '-' : c }); i++; continue; }
+      if ('+-−±·*×/÷^_(){}|∠°\'⊕'.includes(c)) { t.push({ k: 'op', v: c === '−' ? '-' : c }); i++; continue; }
       if (c === ':' || c === ';' || c === '…' || c === ',') { t.push({ k: 'punct', v: c }); i++; continue; }
       throw new Error(`carattere inatteso «${c}» in ${src}`);
     }
@@ -72,7 +72,7 @@
       if (isOp('-') || isOp('±') || isOp('+')) { const o = next().v; first = { t: 'neg', o, x: term() }; }
       else first = term();
       const items = [first], ops = [];
-      while (isOp('+') || isOp('-') || isOp('±')) { ops.push(next().v); items.push(term()); }
+      while (isOp('+') || isOp('-') || isOp('±') || isOp('⊕')) { ops.push(next().v); items.push(term()); }
       return ops.length ? { t: 'sum', items, ops } : items[0];
     }
     // la frazione lega più del prodotto: L * {Delta I}/{Delta t} è L · (ΔI/Δt)
@@ -248,7 +248,7 @@
       case 'txt': return n.v;
       case 'id': return sayId(n.v) + (n.prime ? (n.prime === 1 ? ' primo' : n.prime === 2 ? ' secondo' : ' terzo') : '') + (n.sub != null ? ' ' + n.sub : '');
       case 'rel': return n.parts.map((x, i) => (i ? (n.ops[i - 1] === ' ' ? ' ' : ` ${RELS[n.ops[i - 1]] || n.ops[i - 1]} `) : '') + speakN(x)).join('').replace(/ +/g, ' ').trim();
-      case 'sum': return n.items.map((x, i) => (i ? ` ${n.ops[i - 1] === '-' ? 'meno' : n.ops[i - 1] === '±' ? 'più o meno' : 'più'} ` : '') + speakN(x)).join('');
+      case 'sum': return n.items.map((x, i) => (i ? ` ${n.ops[i - 1] === '-' ? 'meno' : n.ops[i - 1] === '±' ? 'più o meno' : n.ops[i - 1] === '⊕' ? 'xor' : 'più'} ` : '') + speakN(x)).join('');
       case 'neg': return (n.o === '-' ? 'meno ' : n.o === '±' ? 'più o meno ' : '') + speakN(n.x);
       case 'mul': return speakN(n.a) + ' per ' + speakN(n.b);
       case 'div': return speakN(n.a) + ' diviso ' + speakN(n.b);
