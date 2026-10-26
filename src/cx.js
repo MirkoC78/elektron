@@ -63,11 +63,19 @@
     let s = U.normalizeInput(input).replace(/\s+/g, '');
     if (!s) return { ok: false, msg: 'Scrivi il risultato.' };
     // polare
-    let m = s.match(/^(.+?)(?:∠|\/|ang)([+-]?\d+(?:[.,]\d+)?)°?$/);
+    // polare; l'unità può stare sul modulo (2,2 kΩ∠−30°) o dopo l'angolo (2,2∠−30° kΩ), con il prefisso che vale per il modulo
+    let m = s.match(/^(.+?)(?:∠|\/|ang)([+-]?\d+(?:[.,]\d+)?)°?(.*)$/);
     if (m) {
       const r = U.parse(m[1]);
       if (!r.ok) return { ok: false, msg: r.msg };
-      return { ok: true, z: polar(r.value, parseFloat(m[2].replace(',', '.'))), unit: r.unit, form: 'polare' };
+      let mod = r.value, unit = r.unit;
+      if (m[3]) {
+        const ru = U.readUnit(m[3]);
+        if (!ru || r.unit) return { ok: false, msg: `Non riconosco l’unità «${m[3]}».` };
+        mod *= 10 ** U.PREFIX[ru.prefix];
+        unit = ru.unit;
+      }
+      return { ok: true, z: polar(mod, parseFloat(m[2].replace(',', '.'))), unit, form: 'polare' };
     }
     // algebrica, con l'unità facoltativa fuori dalle parentesi
     let unit = null;

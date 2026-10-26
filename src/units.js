@@ -183,7 +183,9 @@
     if (!m) return { ok: false, err: 'formato', msg: 'Non riesco a leggere il numero: scrivilo per esempio come 4,7 k oppure 4700.' };
     const [, sg, body, e1, e2, rest] = m;
     // «4.700» può voler dire 4,7 oppure 4700: meglio chiedere che indovinare
-    if (/^\d{1,3}(\.\d{3})+$/.test(body)) return { ok: false, err: 'ambiguo', msg: `«${body}» è ambiguo: per 4700 scrivi 4700 (senza punto), per 4,7 usa la virgola.` };
+    // «4.700» si legge come 4,7 (punto decimale), ma potrebbe essere 4700 con il punto delle migliaia: si segna il dubbio
+    // e decide il controllo della risposta (answers.js), che non accetta mai la lettura con le migliaia
+    const thousands = e1 == null && e2 == null && /^[1-9]\d{0,2}(\.\d{3})+$/.test(body) ? parseFloat(body.replace(/\./g, '')) : null;
     if ((body.match(/[.,]/g) || []).length > 1) return { ok: false, err: 'formato', msg: 'C’è più di una virgola: scrivi il numero con una sola virgola decimale.' };
     let v = parseFloat(body.replace(/ /g, '').replace(',', '.'));
     const ex = e1 ?? e2;
@@ -191,7 +193,8 @@
     const ru = readUnit(rest);
     if (!ru) return { ok: false, err: 'unita', msg: `Non riconosco l’unità «${rest}».` };
     v *= 10 ** PREFIX[ru.prefix];
-    return { ok: true, value: sg === '-' ? -v : v, unit: ru.unit, prefix: ru.prefix, style: ex != null ? 'scientifica' : 'normale' };
+    const amb = thousands == null ? null : (sg === '-' ? -1 : 1) * thousands * 10 ** PREFIX[ru.prefix];
+    return { ok: true, value: sg === '-' ? -v : v, unit: ru.unit, prefix: ru.prefix, style: ex != null ? 'scientifica' : 'normale', thousands: amb };
   }
   /* confronta una risposta con il valore atteso. exp: { v, u, tol (relativa, predefinita 0,01), abs (assoluta) }.
      Esito: { ok, value, unitStatus: 'ok'|'mancante'|'sbagliata', near } */

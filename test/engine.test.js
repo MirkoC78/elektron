@@ -247,7 +247,9 @@ const parseCases = [
   ['3 kWh', 3000, 'Wh'], ['50 Hz', 50, 'Hz'], ['2,5 kHz', 2500, 'Hz'], ['20 ms', 0.02, 's'], ['0,5', 0.5, null], [',5', 0.5, null], ['1,2 mC', 1.2e-3, 'C'], ['36°', 36, '°'],
 ];
 for (const [s, v, u] of parseCases) { checks++; const p = U.parse(s); if (!p.ok || !near(p.value, v, 1e-9) || p.unit !== u) err(`lettura: «${s}» → ${JSON.stringify(p)} invece di ${v} ${u}`); }
-for (const s of ['4.700', 'abc', '4,7 Xq', '4,7,1', '']) { checks++; if (U.parse(s).ok) err(`lettura: «${s}» non doveva essere accettato`); }
+for (const s of ['abc', '4,7 Xq', '4,7,1', '']) { checks++; if (U.parse(s).ok) err(`lettura: «${s}» non doveva essere accettato`); }
+// «4.700» si legge 4,7 ma con il dubbio delle migliaia segnato (lo risolve il controllo delle risposte)
+checks++; { const p = U.parse('4.700'); if (!p.ok || p.value !== 4.7 || p.thousands !== 4700) err('lettura: 4.700 senza il dubbio delle migliaia'); if (U.parse('0.273').thousands != null) err('lettura: 0.273 non è ambiguo'); }
 // confronto: unità mancante segnalata, unità sbagliata respinta, tolleranza 1 %
 const ck = (s, v, u) => U.check(s, { v, u });
 const cmp = [['4,7 kΩ', 4700, 'Ω', true, 'ok'], ['4700', 4700, 'Ω', true, 'mancante'], ['4,7 kV', 4700, 'Ω', false, 'sbagliata'], ['4,74 k', 4700, 'Ω', true, 'mancante'], ['4,8 k', 4700, 'Ω', false, 'mancante'], ['4,7', 4700, 'Ω', false, 'mancante']];
