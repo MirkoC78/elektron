@@ -37,6 +37,7 @@
         let j = i; while (j < s.length && /[A-Za-zÀ-ÿΑ-ωµ]/.test(s[j])) j++;
         t.push({ k: 'id', v: s.slice(i, j) }); i = j; continue;
       }
+      if (s.startsWith('<=', i) || s.startsWith('>=', i)) { t.push({ k: 'rel', v: c === '<' ? '≤' : '≥' }); i += 2; continue; }
       if (s.startsWith('≤', i) || s.startsWith('≥', i)) { t.push({ k: 'rel', v: c }); i++; continue; }
       if ('=≈≠<>→⇒'.includes(c)) { t.push({ k: 'rel', v: c }); i++; continue; }
       if ('+-−±·*×/÷^_(){}|∠°\''.includes(c)) { t.push({ k: 'op', v: c === '−' ? '-' : c }); i++; continue; }
@@ -56,7 +57,14 @@
     function rel() {
       const parts = [expr()];
       const ops = [];
-      while (peek() && (peek().k === 'rel' || peek().k === 'punct')) { ops.push(next().v); parts.push(expr()); }
+      for (;;) {
+        const tk = peek();
+        if (!tk) break;
+        if (tk.k === 'rel' || tk.k === 'punct') { ops.push(next().v); if (peek()) parts.push(expr()); else parts.push({ t: 'txt', v: '' }); continue; }
+        // un testo o una quantità accostati senza operatore: «"supera" 12 V», «"valore commerciale:" 4,7 kΩ»
+        if (tk.k === 'txt' || tk.k === 'q' || (parts[parts.length - 1].t === 'txt')) { ops.push(' '); parts.push(expr()); continue; }
+        break;
+      }
       return ops.length ? { t: 'rel', parts, ops } : parts[0];
     }
     function expr() {
@@ -109,6 +117,8 @@
         return txt.replace(/,/g, ',');
       }
       const tk = next();
+      // V_+ e V_-: gli ingressi dell'operazionale
+      if (tk && tk.k === 'op' && (tk.v === '+' || tk.v === '-')) return tk.v === '-' ? '−' : '+';
       if (!tk || (tk.k !== 'id' && tk.k !== 'num')) throw new Error('pedice mancante in ' + src);
       return tk.v;
     }
@@ -161,7 +171,7 @@
         if (n.prime) base = `<msup>${base}<mo>${'′'.repeat(n.prime)}</mo></msup>`;
         return n.sub != null ? `<msub>${base}<mrow><mtext>${esc(n.sub)}</mtext></mrow></msub>` : base;
       }
-      case 'rel': return `<mrow>${n.parts.map((x, i) => (i ? `<mo>${n.ops[i - 1] === ':' ? ':' : esc(n.ops[i - 1])}</mo>` : '') + mml(x)).join('')}</mrow>`;
+      case 'rel': return `<mrow>${n.parts.map((x, i) => (i ? (n.ops[i - 1] === ' ' ? '<mspace width="0.3em"></mspace>' : `<mo>${esc(n.ops[i - 1])}</mo>`) : '') + mml(x)).join('')}</mrow>`;
       case 'sum': return `<mrow>${n.items.map((x, i) => (i ? `<mo>${n.ops[i - 1] === '-' ? '−' : esc(n.ops[i - 1])}</mo>` : '') + mml(x)).join('')}</mrow>`;
       case 'neg': return `<mrow><mo form="prefix">${n.o === '-' ? '−' : esc(n.o)}</mo>${mml(n.x)}</mrow>`;
       case 'mul': return `<mrow>${unwrap(n.a).t === 'neg' ? mml(n.a) : mmlF(n.a)}<mo>·</mo>${mmlF(n.b)}</mrow>`;
@@ -198,7 +208,7 @@
         const s = n.sub == null ? '' : /^\d+$/.test(n.sub) ? n.sub.split('').map((d) => SUBD[d]).join('') : n.sub;
         return n.v + '′'.repeat(n.prime || 0) + s;
       }
-      case 'rel': return n.parts.map((x, i) => (i ? ` ${n.ops[i - 1]} ` : '') + txt(x)).join('').replace(/ : /g, ': ');
+      case 'rel': return n.parts.map((x, i) => (i ? (n.ops[i - 1] === ' ' ? ' ' : n.ops[i - 1] === ',' ? ', ' : ` ${n.ops[i - 1]} `) : '') + txt(x)).join('').replace(/ : /g, ': ').replace(/ +/g, ' ').trim();
       case 'sum': return n.items.map((x, i) => (i ? ` ${n.ops[i - 1] === '-' ? '−' : n.ops[i - 1]} ` : '') + txt(x)).join('');
       case 'neg': return (n.o === '-' ? '−' : n.o) + txt(n.x);
       case 'mul': return (unwrap(n.a).t === 'neg' ? txt(n.a) : txtF(n.a)) + ' · ' + txtF(n.b);
@@ -237,7 +247,7 @@
       case 'q': return sayQ(n.v);
       case 'txt': return n.v;
       case 'id': return sayId(n.v) + (n.prime ? (n.prime === 1 ? ' primo' : n.prime === 2 ? ' secondo' : ' terzo') : '') + (n.sub != null ? ' ' + n.sub : '');
-      case 'rel': return n.parts.map((x, i) => (i ? ` ${RELS[n.ops[i - 1]] || n.ops[i - 1]} ` : '') + speakN(x)).join('');
+      case 'rel': return n.parts.map((x, i) => (i ? (n.ops[i - 1] === ' ' ? ' ' : ` ${RELS[n.ops[i - 1]] || n.ops[i - 1]} `) : '') + speakN(x)).join('').replace(/ +/g, ' ').trim();
       case 'sum': return n.items.map((x, i) => (i ? ` ${n.ops[i - 1] === '-' ? 'meno' : n.ops[i - 1] === '±' ? 'più o meno' : 'più'} ` : '') + speakN(x)).join('');
       case 'neg': return (n.o === '-' ? 'meno ' : n.o === '±' ? 'più o meno ' : '') + speakN(n.x);
       case 'mul': return speakN(n.a) + ' per ' + speakN(n.b);

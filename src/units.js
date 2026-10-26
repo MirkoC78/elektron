@@ -97,6 +97,14 @@
     // il prefisso più grande per cui la mantissa resta almeno 1
     let best = allowed.slice().sort((p, q) => PREFIX[p] - PREFIX[q])[0];
     for (const p of allowed.slice().sort((x, y) => PREFIX[x] - PREFIX[y])) if (a / 10 ** PREFIX[p] >= 1 - 1e-12) best = p;
+    // come nei libri di testo: un valore fra 0,1 e 1 dell’unità, con al massimo due cifre significative, si scrive senza il milli
+    // (0,7 V, 0,5 A, 0,25 W), mentre 126 mW e 12,5 mA restano così
+    const up = allowed.filter((p) => PREFIX[p] > PREFIX[best]).sort((x, y) => PREFIX[x] - PREFIX[y])[0];
+    if (up === '' && best === 'm') {
+      const m2 = a / 10 ** PREFIX[up];
+      const digits = String(roundSig(a, sig)).replace(/^0\.0*|\.|e.*$/g, '').replace(/0+$/, '').length;
+      if (m2 >= 0.1 - 1e-12 && digits <= 2) best = up;
+    }
     return best;
   }
   // valore con unità: fmt(4700, 'Ω') → «4,7 kΩ»; fmt(0.0125, 'A', { prefixes: ['', 'm'] }) → «12,5 mA»
