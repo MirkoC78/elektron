@@ -20,3 +20,6 @@ figcaption { font-size: 13px; color: #4A5562; }
 .swatches { display: flex; gap: 4px; }
 .swatches i { width: 28px; height: 28px; border-radius: 6px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, 362px); gap: 24px; }
+.frames .row { display: flex; gap: 16px; flex-wrap: wrap; }
+.frames figure { margin: 0; }
+.frames iframe { border: 1px solid #999; border-radius: 12px; }

@@ -1,0 +1,18 @@
+ELEKTRON — pacchetto per la pubblicazione (versione 4ade7a0e59)
+
+Contenuto
+  index.html             l'applicazione completa (caratteri e formule incorporati)
+  manifest.webmanifest   dati per l'installazione su telefono
+  sw.js                  service worker: rende l'app utilizzabile senza rete (solo nella sua cartella)
+  .nojekyll              per GitHub Pages: pubblica i file così come sono
+  icons/                 icone dell'app
+  LICENZE-CARATTERI.txt  licenze SIL OFL 1.1 di IBM Plex Sans, IBM Plex Mono e STIX Two Math
+
+Pubblicazione
+  Carica l'intera cartella su un hosting statico con HTTPS (GitHub Pages, Netlify, spazio web della scuola).
+  Non serve un server: niente database, niente account, nessun dato degli studenti lascia il dispositivo.
+  L'installazione («Installa» / «Aggiungi alla schermata Home») richiede HTTPS.
+
+Aggiornamenti
+  Ricostruisci con «node build.js» e ricarica i file: il service worker cambia nome di cache
+  a ogni versione e sostituisce la vecchia copia offline al primo accesso.

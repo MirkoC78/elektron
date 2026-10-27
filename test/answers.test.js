@@ -211,6 +211,11 @@ for (let v = -128; v < 128; v++) {
 for (const n of [0, 7, 25, 99, 2026]) { stats.giuste++; if (!A.base(NS.toBCD(n), { v: n, bcd: true }).ok) err(`BCD di ${n} respinto`); }
 { const r = A.base('11001', { v: 25, bcd: true }); if (r.ok) err('BCD: binario puro accettato'); }
 { const r = A.table([0, 1, 1, 0], [0, 1, 1, 0]); if (!r.ok) err('tabella giusta respinta'); const r2 = A.table([0, 1, 0, 0], [0, 1, 1, 0]); if (r2.ok || r2.wrongRows[0] !== 2) err('tabella sbagliata'); }
+// casi trovati dal giocatore automatico nel browser: una costante è già in forma minima; le ore si scrivono «h»
+if (!A.logic('0', { expr: { op: 'const', v: 0 }, vars: ['A', 'B'], minimal: true }).ok) err('la costante 0 non è accettata come forma minima');
+if (!A.logic('1', { expr: { op: 'const', v: 1 }, vars: ['A', 'B'], minimal: true }).ok) err('la costante 1 non è accettata come forma minima');
+if (!A.numeric('2,5 h', { v: 2.5, u: 'h', mistakes: [] }).ok) err('le ore (h) non sono riconosciute');
+if (A.numeric('2,5 H', { v: 2.5, u: 'h', mistakes: [] }).ok) err('henry accettato al posto delle ore');
 
 console.log('\nTest del controllo delle risposte');
 console.log(`  Scritture giuste provate: ${stats.giuste}; risposte sbagliate simulate: ${stats.sbagliate}`);

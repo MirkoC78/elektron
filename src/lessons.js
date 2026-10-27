@@ -181,7 +181,8 @@
       if (!it) continue;
       if (want === 4) {
         // esperto: tutto il problema, senza suggerimenti, con la verifica di ogni risultato intermedio
-        const parts = (it.problem.sol.steps || []).filter((s) => typeof s.v === 'number' && isFinite(s.v) && s.u != null);
+        // solo i risultati con un'unità che si scrive (non i passaggi di servizio, come il determinante in Ω²)
+        const parts = (it.problem.sol.steps || []).filter((s) => typeof s.v === 'number' && isFinite(s.v) && s.u != null && (s.u === '' || U.UNITS[s.u]));
         if (it.type === 'calc' && parts.length >= 2) { it.type = 'esperto'; it.parts = parts; }
         else if (it.type !== 'calc') continue;
       }

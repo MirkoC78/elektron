@@ -1,0 +1,37 @@
+{
+  "name": "Elektron: elettronica per l’istituto tecnico",
+  "short_name": "Elektron",
+  "description": "Corso guidato di elettronica: lezioni, problemi con lo svolgimento, laboratorio virtuale, teoria e glossario.",
+  "id": "./",
+  "lang": "it",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F3EE",
+  "theme_color": "#F4F3EE",
+  "categories": [
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -30,6 +30,7 @@
     H: { name: 'henry', q: 'induttanza', alias: ['henry'] },
     Hz: { name: 'hertz', q: 'frequenza', alias: ['hz', 'HZ', 'hertz'] },
     s: { name: 'secondo', q: 'tempo', alias: ['sec'] },
+    h: { name: 'ora', q: 'tempo', alias: ['ore', 'ora'] },
     S: { name: 'siemens', q: 'conduttanza', alias: ['siemens'] },
     VA: { name: 'voltampere', q: 'potenza apparente', alias: ['va'] },
     var: { name: 'volt-ampere reattivo', q: 'potenza reattiva', alias: ['VAr', 'VAR', 'Var', 'VAR'] },
@@ -47,7 +48,7 @@
   const ALIAS = new Map();
   for (const [sym, u] of Object.entries(UNITS)) { ALIAS.set(sym, sym); for (const a of u.alias) ALIAS.set(a, sym); }
   // unità che non prendono prefissi (o che li prendono solo in casi che a scuola non servono)
-  const NO_PREFIX = new Set(['°', '°C', '%', 'dB', 'rad', 'rad/s', 'bit', 'Ω·m', 'V/°C', 'V/µs']);
+  const NO_PREFIX = new Set(['°', '°C', '%', 'dB', 'rad', 'rad/s', 'bit', 'Ω·m', 'V/°C', 'V/µs', 'h']);
   // unità che a scuola si scrivono solo con i sottomultipli (niente «ks», «kF», «kH»)
   const ONLY_SUB = new Set(['s', 'F', 'H']);
 

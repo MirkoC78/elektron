@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elektron: confronto delle tavolozze</title>
+<link rel="stylesheet" href="prove.css">
+</head>
+<body>
+<h1>Le tre tavolozze sull'app vera (riquadri da 360 px)</h1>
+<p>Rame · Ardesia · Viola elettrico, in chiaro e in scuro. Pagina di prova: non fa parte del sito.</p>
+<div id="g" class="frames"></div>
+<script>
+const views = [['Percorso', 'demo=12'], ['Palestra', 'demo=40&view=gym'], ['Profilo', 'demo=40&view=me']];
+const pals = [['rame', 'Rame'], ['ardesia', 'Ardesia'], ['viola', 'Viola elettrico']];
+let h = '';
+for (const theme of ['light', 'dark']) for (const [v, vl] of views) {
+  h += `<h2>${vl}, tema ${theme === 'light' ? 'chiaro' : 'scuro'}</h2><div class="row">`;
+  for (const [p, pl] of pals) h += `<figure><figcaption>${pl}</figcaption><iframe title="${pl}, ${vl}" width="360" height="720" src="../dist/elektron.html?v=${Date.now()}#${v}&pal=${p}&theme=${theme}"></iframe></figure>`;
+  h += '</div>';
+}
+document.getElementById('g').innerHTML = h;
+</script>
+</body>
+</html>

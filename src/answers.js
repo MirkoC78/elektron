@@ -87,7 +87,8 @@
     if (sol.minimal) {
       const best = sol.form === 'POS' ? LG.minimalPOS(target, vars, dc) : LG.minimalSOP(target, vars, dc);
       const cost = best.cost || { terms: best.implicants.length, literals: best.implicants.reduce((s, i) => s + [...i].filter((c) => c !== '-').length, 0) };
-      const terms = sol.form === 'POS' ? (x.op === 'and' ? x.xs.length : 1) : (x.op === 'or' ? x.xs.length : 1);
+      // una costante (0 o 1) non ha termini né letterali
+      const terms = x.op === 'const' ? 0 : sol.form === 'POS' ? (x.op === 'and' ? x.xs.length : 1) : (x.op === 'or' ? x.xs.length : 1);
       const lits = LG.literals(x);
       const twoLevel = sol.form === 'POS' ? isPOS(x) : isSOP(x);
       if (!twoLevel) return { ok: false, verdict: 'sbagliata', equivalent: true, msg: sol.form === 'POS' ? 'L’espressione è equivalente, ma non è un prodotto di somme.' : 'L’espressione è equivalente, ma non è una somma di prodotti: togli le parentesi.' };
