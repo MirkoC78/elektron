@@ -13,6 +13,8 @@
   --f-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
   --f-math: 'Elektron Math', 'STIX Two Math', 'Cambria Math', math;
   --sh-float: 0 12px 40px rgb(16 20 24 / .24);
+  --on-g-hover: rgb(255 255 255 / .14);
+  --fs-math: 1.08em;
   --veil: rgb(10 12 16 / .5);
   --thumb: #FFFFFF;
   --ease: cubic-bezier(.2, .7, .2, 1);
@@ -98,7 +100,7 @@ a { color: var(--pri-text); }
 .grow { flex: 1; min-width: 0; }
 svg { flex: none; }
 :where(svg:not([width])) { width: var(--ic-sm); height: var(--ic-sm); }
-math { font-family: var(--f-math); font-size: 1.08em; }
+math { font-family: var(--f-math); font-size: var(--fs-math); }
 math[display="block"] { margin: var(--sp-1) 0; }
 /* una formula larga scorre nel suo riquadro invece di allargare la pagina */
 .mathbox { overflow-x: auto; max-width: 100%; padding: var(--sp-1) 0; }
@@ -233,7 +235,7 @@ textarea.typed { resize: vertical; font-family: var(--f-mono); font-size: var(--
 .unit-head small { font-size: var(--fs-xs); font-weight: 600; opacity: .9; text-transform: uppercase; letter-spacing: 0.06em; }
 .unit-head b { font-size: var(--fs-lg); line-height: var(--lh-tight); }
 .unit-head .iconbtn { color: var(--on-g); }
-.unit-head .iconbtn:hover { background: rgb(255 255 255 / .14); }
+.unit-head .iconbtn:hover { background: var(--on-g-hover); }
 .unit.locked .unit-head { background: var(--surface-2); color: var(--muted); }
 .unit.locked .unit-head .iconbtn { color: var(--muted); }
 .via { list-style: none; margin-top: var(--sp-2); }
@@ -279,7 +281,7 @@ html.ov-open, html.ov-open body { overflow: hidden; }
 .fb-extra { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .foot-hint { color: var(--muted); font-size: var(--fs-sm); text-align: center; }
 @media (prefers-reduced-motion: no-preference) { .fx-in { animation: fxin .22s var(--ease); } }
-@keyframes fxin { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes fxin { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .ex-head { display: grid; gap: var(--sp-2); }
 .ex-tags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .prompt { font-size: var(--fs-lg); font-weight: 600; line-height: var(--lh); }
@@ -297,8 +299,6 @@ html.ov-open, html.ov-open body { overflow: hidden; }
 .opt.wrong { border-color: var(--bad); background: var(--bad-soft); box-shadow: 0 var(--depth) 0 var(--bad); }
 .opt.right .k, .opt.wrong .k { border-color: currentColor; }
 .opt:disabled { cursor: default; }
-.opt .bands-mini { display: inline-flex; gap: 2px; }
-.opt .band { display: inline-block; width: var(--sp-3); height: var(--sp-6); border: 1px solid var(--line-strong); border-radius: 2px; }
 /* risposta scritta con l'unità */
 .answer { display: grid; gap: var(--sp-2); }
 .answer-row { display: flex; align-items: center; gap: var(--sp-2); }
@@ -362,7 +362,6 @@ html.ov-open, html.ov-open body { overflow: hidden; }
 .para th, .para td { padding: var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 .para thead th { background: var(--surface-2); font-weight: 700; }
 .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
-.newc { display: inline-flex; align-items: center; gap: var(--sp-1); }
 
 /* ---------- Fogli, finestre, avvisi ---------- */
 .sheet-veil, .modal-veil { position: fixed; inset: 0; z-index: 60; background: var(--veil); }
@@ -399,12 +398,12 @@ html.ov-open, html.ov-open body { overflow: hidden; }
 .badge .grow span { font-size: var(--fs-sm); color: var(--muted); }
 .medal { display: grid; place-items: center; width: var(--ic-xl); height: var(--ic-xl); border-radius: 50%; background: var(--star-soft); color: var(--star-d); font-weight: 700; font-family: var(--f-mono); flex: none; }
 .badge.off .medal { background: var(--surface-2); color: var(--muted); }
-.ring { width: 66px; height: 66px; }
+.ring { width: 64px; height: 64px; flex: none; }
 .goal { display: flex; align-items: center; gap: var(--sp-4); }
 .week { width: 100%; height: auto; }
 .week .bar-g { fill: var(--pri); }
 .week .bar-0 { fill: var(--surface-2); }
-.week text { font-size: 11px; fill: var(--muted); font-family: var(--f-ui); }
+.week text { font-size: var(--fs-xs); fill: var(--muted); font-family: var(--f-ui); }
 .finish { display: grid; justify-items: center; gap: var(--sp-4); text-align: center; padding-top: var(--sp-4); }
 .bigstars { display: flex; gap: var(--sp-2); color: var(--line-strong); }
 .bigstars svg { width: var(--ic-xl); height: var(--ic-xl); }
@@ -418,7 +417,7 @@ html.ov-open, html.ov-open body { overflow: hidden; }
 .steps-dots i { width: var(--sp-7); height: var(--sp-1); border-radius: var(--r-pill); background: var(--line); }
 .steps-dots i.on { background: var(--pri); }
 .onb-hero { display: grid; justify-items: center; gap: var(--sp-3); text-align: center; }
-.onb-hero h1 { letter-spacing: 0.16em; }
+.onb-hero h1 { font-size: var(--fs-3xl); letter-spacing: 0.16em; }
 .choices { display: grid; gap: var(--sp-2); }
 .choice { display: flex; align-items: center; gap: var(--sp-3); width: 100%; min-height: var(--h-lg); padding: var(--sp-2) var(--sp-3); border: 2px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--ink); text-align: left; }
 .choice[aria-pressed="true"] { border-color: var(--pri); background: var(--pri-soft); }
@@ -462,7 +461,7 @@ details.card[open] > summary { margin-bottom: var(--sp-3); }
 .ring-bg { fill: none; stroke: var(--surface-2); stroke-width: 8; }
 .ring-fg { fill: none; stroke: var(--star); stroke-width: 8; stroke-linecap: round; }
 .ring-fg.full { stroke: var(--good); }
-.ring-t { font-size: 15px; font-weight: 700; fill: var(--ink); font-family: var(--f-ui); }
+.ring-t { font-size: var(--fs-md); font-weight: 700; fill: var(--ink); font-family: var(--f-ui); }
 .week .goal-line { stroke: var(--muted); stroke-dasharray: 4 4; stroke-width: 1; }
 .pips { display: inline-flex; gap: 3px; flex: none; }
 .pips i { width: var(--sp-2); height: var(--sp-2); border-radius: 50%; border: 1px solid var(--line-strong); }
@@ -474,3 +473,5 @@ details.card[open] > summary { margin-bottom: var(--sp-3); }
 .stepbox .mathbox { padding: 0; }
 /* nelle griglie i figli non si allargano oltre la colonna: le formule lunghe scorrono nel loro riquadro */
 .ov-body > *, .aux > *, .stack > *, .teach > *, .sheet-in > *, .view > *, .sec > *, .stepbox > *, .card > *, .formula-card > *, .example > *, .lesson-text > *, .legend > *, .fb-txt > *, .theory > * { min-width: 0; }
+.opts.two { grid-template-columns: 1fr 1fr; }
+.fb-wrap { display: grid; gap: var(--sp-2); }

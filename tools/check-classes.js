@@ -3,8 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 const root = path.join(__dirname, '..');
-const js = ['src/app.js', 'src/guide.js'].filter((f) => fs.existsSync(path.join(root, f))).map((f) => fs.readFileSync(path.join(root, f), 'utf8')).join('\n');
-const css = fs.readFileSync(path.join(root, 'src/app.css'), 'utf8');
+const js = ['src/ui-core.js', 'src/ui-render.js', 'src/ui-exercises.js', 'src/ui-session.js', 'src/ui-views.js', 'src/app.js', 'src/guide.js', 'src/schematic.js', 'src/plots.js', 'src/gates.js', 'src/templates.js'].filter((f) => fs.existsSync(path.join(root, f))).map((f) => fs.readFileSync(path.join(root, f), 'utf8')).join('\n');
+const css = fs.readFileSync(path.join(root, 'src/app.css'), 'utf8') + fs.readFileSync(path.join(root, 'src/sch.css'), 'utf8');
 const used = new Set();
 const add = (s) => s.split(/\s+/).forEach((c) => { if (/^[a-z][\w-]*$/i.test(c)) used.add(c); });
 for (const m of js.matchAll(/class="([^"]*)"/g)) add(m[1].replace(/\$\{[^}]*\}/g, ' '));

@@ -25,6 +25,23 @@
     }
     if (worst) { const r = worst.getBoundingClientRect(); R.fuori.push(`${where}: <${worst.tagName.toLowerCase()} class="${typeof worst.className === 'string' ? worst.className : ''}"> esce di ${Math.round(r.right - W)} px`); }
   }
+  // accessibilità dello strato attivo: ogni comando ha un nome, ogni disegno una descrizione, bersagli di almeno 40 px, identificatori unici
+  R.a11y = R.a11y || [];
+  function checkA11y(where) {
+    const layer = document.querySelector('#modal') || document.querySelector('#sheet') || document.querySelector('#ov') || document.querySelector('#app');
+    const name = (el) => (el.getAttribute('aria-label') || el.textContent || '').trim() || (el.id && layer.querySelector('label[for="' + el.id + '"]') ? 'etichetta' : '') || (el.closest('label') ? 'etichetta' : '');
+    for (const el of layer.querySelectorAll('button, a[href], input, select, textarea')) {
+      if (el.offsetParent === null && el.type !== 'checkbox') continue;
+      if (!name(el)) R.a11y.push(where + ': comando senza nome <' + el.tagName.toLowerCase() + ' class="' + el.className + '">');
+      const r = el.getBoundingClientRect();
+      if (el.type !== 'checkbox' && el.tagName !== 'A' && !el.closest('.legend') && r.height && r.height < 39.5) R.a11y.push(where + ': bersaglio basso ' + Math.round(r.height) + ' px <' + el.tagName.toLowerCase() + ' class="' + el.className + '">');
+    }
+    for (const s of layer.querySelectorAll('svg')) if (!s.closest('[aria-hidden="true"]') && s.getAttribute('aria-hidden') !== 'true' && !(s.getAttribute('role') === 'img' && (s.getAttribute('aria-label') || '').length > 3)) R.a11y.push(where + ': disegno senza descrizione <svg class="' + (s.getAttribute('class') || '') + '">');
+    const ids = [...document.querySelectorAll('[id]')].map((e) => e.id);
+    const dup = ids.filter((x, i) => ids.indexOf(x) !== i);
+    if (dup.length) R.a11y.push(where + ': identificatori ripetuti ' + [...new Set(dup)].join(', '));
+    for (const m of layer.querySelectorAll('math')) if (!(m.getAttribute('alttext') || '').trim()) R.a11y.push(where + ': formula senza lettura');
+  }
   // la risposta giusta, scritta come la scriverebbe uno studente
   function typedAnswer(it) {
     const sol = it.problem.sol;
@@ -75,6 +92,7 @@
       const where = `${id} n. ${ses.i + 1} (${it.type}${it.gen ? ' ' + it.gen : ''})`;
       R.corrente = where;
       checkWidth(where);
+      checkA11y(where);
       if (it.type === 'teach') { R.schede++; click($('#nextBtn'), 'Continua'); await wait(2); continue; }
       R.esercizi++; R.tipi[it.type] = (R.tipi[it.type] || 0) + 1;
       try { await answer(it); } catch (e) { R.errori.push(`${where}: ${e.message}`); }
@@ -86,6 +104,7 @@
         await wait(5);
       } else if (!A.cur().res.ok) R.errori.push(`${where}: risposta giusta rifiutata («${(($('#typed') || {}).value) || ''}»): ${$('#ovFoot').innerText.replace(/\s+/g, ' ').slice(0, 200)}`);
       checkWidth(where + ' dopo la verifica');
+      checkA11y(where + ' dopo la verifica');
       click($('#nextBtn'), 'Continua dopo la verifica');
       await wait(2);
     }
@@ -124,6 +143,7 @@
       if (A.ses()) { A.act('dunno'); A.act('endSession'); }
       A.startPractice('review'); if (A.ses()) await playSession(`ripasso ${at}`);
     }
+    for (const v of ['path', 'gym', 'lib', 'formulas', 'conv', 'words', 'me', 'topic:u4']) { A.setVIEW(v); await wait(5); checkA11y('vista ' + v); }
     R.fatto = true;
     return R;
   };

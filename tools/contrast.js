@@ -1,6 +1,7 @@
-/* Controllo dei contrasti WCAG 2.1 AA per ogni palette, in tema chiaro e scuro, ricostruendo la cascata delle variabili di app.css.
+/* Controllo dei contrasti WCAG 2.1 AA della tavolozza Ardesia, in tema chiaro e scuro, ricostruendo la cascata delle variabili di app.css.
+   Comprende i colori degli schemi e degli strumenti (sch.css usa gli stessi gettoni).
    Uso: node tools/contrast.js [--md]   (con --md stampa una tabella per docs/accessibilita.md).
-   Le proposte di colore scartate (bronzo, affresco) sono nella storia del repository, tappa 4. */
+   Le tavolozze scartate (Rame, Viola elettrico) sono nella storia del repository, tappa 6. */
 const fs = require('fs');
 const path = require('path');
 const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'app.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
@@ -35,8 +36,11 @@ const PAIRS = [
   ['--ink', '--good-soft', 4.5, 'riquadro della risposta giusta'], ['--ink', '--bad-soft', 4.5, 'riquadro della risposta sbagliata'],
   ['--good-text', '--good-soft', 4.5, 'risposta giusta, titolo e scelta'], ['--bad-text', '--bad-soft', 4.5, 'risposta sbagliata, titolo e scelta'], ['--star-d', '--star-soft', 4.5, 'etichetta «Nuova»'], ['--star-d', '--surface', 4.5, 'punti XP'],
   ['--flame', '--surface', 4.5, 'serie di giorni'], ['--on-state', '--bad', 4.5, 'contatore errori'],
-  ['--on-color', '--g-alf', 4.5, 'intestazione unità (lettura)'], ['--on-color', '--g-nom', 4.5, 'intestazione unità (nomi)'], ['--on-color', '--g-ver', 4.5, 'intestazione unità (verbi)'],
-  ['--on-color', '--g-pro', 4.5, 'intestazione unità (pronomi)'], ['--on-color', '--g-sin', 4.5, 'intestazione unità (sintassi)'],
+  ['--on-g', '--g-1', 4.5, 'intestazione unità, classe 3ª'], ['--on-g', '--g-2', 4.5, 'intestazione unità, classe 4ª'], ['--on-g', '--g-3', 4.5, 'intestazione unità, classe 5ª'],
+  ['--acc-text', '--surface', 4.5, 'termini inglesi del glossario'], ['--muted', '--surface-2', 4.5, 'intestazione delle unità chiuse'],
+  ['--sch-text', '--sch-fill', 4.5, 'scritte degli schemi'], ['--sch-muted', '--sch-fill', 4.5, 'valori dei componenti'], ['--sch-wire', '--sch-fill', 3, 'conduttori'],
+  ['--sch-cur', '--sch-fill', 4.5, 'frecce e nomi delle correnti'], ['--sch-vol', '--sch-fill', 4.5, 'frecce e nomi delle tensioni'], ['--sch-node', '--sch-fill', 4.5, 'nomi dei nodi'], ['--sch-hl', '--sch-fill', 3, 'componente evidenziato'],
+  ['--scope-txt', '--scope-bg', 4.5, 'scritte dell’oscilloscopio e del multimetro'], ['--scope-tr1', '--scope-bg', 3, 'traccia 1'], ['--scope-tr2', '--scope-bg', 3, 'traccia 2'],
   ['--pri', '--bg', 3, 'pietra della lezione attuale'], ['--road-done', '--bg', 3, 'pietre completate'], ['--focus', '--bg', 3, 'anello di focus'], ['--focus', '--surface', 3, 'focus sulle schede'],
   ['--line-strong', '--surface', 3, 'bordi dei campi e dei pulsanti chiari'], ['--line-strong', '--bg', 3, 'bordi sullo sfondo'], ['--star', '--surface', 3, 'stelle e anello obiettivo'],
   ['--good', '--surface', 3, 'segno di spunta'], ['--bad', '--bad-soft', 3, 'bordo della risposta sbagliata'], ['--pri', '--surface', 3, 'interruttori accesi'],
@@ -48,11 +52,11 @@ for (const p of [null]) for (const dark of [false, true]) {
   const v = palette(p, dark);
   for (const [fg, bg, min, where] of PAIRS) {
     const a = v[fg], b = v[bg];
-    if (!a || !b) { rows.push([p || 'pigmenti', dark ? 'scuro' : 'chiaro', fg, bg, 'mancante', min, where, false]); fails++; continue; }
+    if (!a || !b) { rows.push([p || 'Ardesia', dark ? 'scuro' : 'chiaro', fg, bg, 'mancante', min, where, false]); fails++; continue; }
     const r = ratio(a, b);
     const ok = r >= min;
     if (!ok) fails++;
-    rows.push([p || 'pigmenti', dark ? 'scuro' : 'chiaro', fg, bg, r.toFixed(2), min, where, ok]);
+    rows.push([p || 'Ardesia', dark ? 'scuro' : 'chiaro', fg, bg, r.toFixed(2), min, where, ok]);
   }
 }
 if (md) {
