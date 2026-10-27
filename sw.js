@@ -1,9 +1,9 @@
-/* Elektron — service worker: tutto in cache per l'uso senza rete. Versione 4ade7a0e59.
+/* Elektron — service worker: tutto in cache per l'uso senza rete. Versione 1d487124cb.
    Il dominio ospita altre app (mirkoc78.github.io/verto/, /hermeneus/): questo service worker vale solo per la sua cartella,
    chiama le cache «elektron@/cartella/@versione» e all'attivazione cancella soltanto le proprie versioni vecchie.
    Non tocca mai le cache che iniziano con «verto@» o «hermeneus@» (né quelle di qualunque altra app). */
 const APP = 'elektron';
-const VERSION = '4ade7a0e59';
+const VERSION = '1d487124cb';
 const SCOPE = new URL('./', self.location).pathname;
 const PREFIX = APP + '@' + SCOPE + '@';
 const CACHE = PREFIX + VERSION;
