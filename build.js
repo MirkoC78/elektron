@@ -37,7 +37,7 @@ const png = (f) => 'data:image/png;base64,' + fs.readFileSync(path.join(ASSETS_D
 const hash = crypto.createHash('sha256').update(code + css + fontCSS);
 if (hasIcons) for (const f of fs.readdirSync(ASSETS_DIR).sort()) hash.update(fs.readFileSync(path.join(ASSETS_DIR, f)));
 const version = hash.digest('hex').slice(0, 10);
-const THEME = '#F4F3EE';
+const THEME = '#F1F3F5';
 // il marchio: un nodo con tre conduttori (un punto di un circuito), disegnato con i gettoni dei temi
 const MARK = '<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 16h9M19 16h9M16 4v9" fill="none" stroke="var(--pri)" stroke-width="3.2" stroke-linecap="round"/><circle cx="16" cy="16" r="5.2" fill="var(--acc)"/></svg>';
 

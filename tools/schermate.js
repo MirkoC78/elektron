@@ -1,5 +1,5 @@
 /* Schermate di Elektron in Chrome senza finestra (non fa parte del sito). Salva in _schermate/.
-   node tools/schermate.js tavolozze   → le tre tavolozze sulle stesse schermate, chiaro e scuro, a 360 px
+   node tools/schermate.js lezione     → un esercizio con lo schema, prima e dopo un errore, chiaro e scuro, a 360 px
    node tools/schermate.js mascotte    → la pagina _prove/mascotte.html
    node tools/schermate.js tutte       → le schermate principali a 360 px e su desktop, chiaro e scuro */
 const path = require('path');
@@ -21,22 +21,16 @@ const TO_SCHEMA = (lessonId, wrong) => `(async () => {
   return A.cur().it.gen;
 })()`;
 
-async function tavolozze() {
+async function lezione() {
   const p = await B.open(null, { w: 360, h: 780, scale: 1 });
   for (const theme of ['light', 'dark']) {
     await p.dark(theme === 'dark');
-    for (const pal of ['rame', 'ardesia', 'viola']) {
-      await p.goto(app(`demo=12&pal=${pal}&theme=${theme}`));
-      await p.shot(path.join(OUT, `tav-${theme}-${pal}-1-percorso.png`));
-      await p.goto(app(`demo=20&pal=${pal}&theme=${theme}`));
-      await p.eval(TO_SCHEMA('u4l3', false));
-      await p.shot(path.join(OUT, `tav-${theme}-${pal}-2-esercizio.png`));
-      await p.eval(TO_SCHEMA('u4l3', true));
-      await B.sleep(200);
-      await p.shot(path.join(OUT, `tav-${theme}-${pal}-3-errore.png`));
-      await p.goto(app(`demo=40&view=me&pal=${pal}&theme=${theme}`));
-      await p.shot(path.join(OUT, `tav-${theme}-${pal}-4-profilo.png`));
-    }
+    await p.goto(app(`demo=20&theme=${theme}`));
+    await p.eval(TO_SCHEMA('u4l3', false));
+    await p.shot(path.join(OUT, `tel-${theme}-esercizio.png`));
+    await p.eval(TO_SCHEMA('u4l3', true));
+    await B.sleep(200);
+    await p.shot(path.join(OUT, `tel-${theme}-errore.png`));
   }
   console.log('errori della console:', p.errors.length ? p.errors : 'nessuno');
   await p.close();
@@ -59,4 +53,4 @@ async function tutte() {
   }
 }
 const what = process.argv[2] || 'tutte';
-({ tavolozze, mascotte, tutte })[what]().catch((e) => { console.error(e); process.exit(1); });
+({ lezione, mascotte, tutte })[what]().catch((e) => { console.error(e); process.exit(1); });

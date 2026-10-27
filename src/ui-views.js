@@ -356,9 +356,7 @@ function viewMe() {
       ${sw('keypad', 'Tastierina dei simboli', 'Prefissi, unità e simboli sotto la casella della risposta', set.keypad)}</div></section>
     <section class="sec"><h2 class="sec-title">Suoni e aspetto</h2><div class="card flush">
       ${sw('sound', 'Suoni', 'Segnali sonori discreti per le risposte', set.sound)}
-      <div class="setting wrap"><div class="grow"><b>Tema</b><span>Colori dell’app</span></div>${seg('theme', [['auto', 'Automatico'], ['light', 'Chiaro'], ['dark', 'Scuro']], set.theme, 'Tema')}</div>
-      <div class="setting wrap"><div class="grow"><b>Tavolozza</b><span>Proposta da scegliere (prova)</span></div>${seg('palette', [['rame', 'Rame'], ['ardesia', 'Ardesia'], ['viola', 'Viola']], set.palette, 'Tavolozza')}</div>
-      <div class="setting wrap"><div class="grow"><b>Mascotte</b><span>Proposta da scegliere (prova)</span></div>${seg('mascot', G.CHOICES.map((c) => [c.id, c.name]), set.mascot, 'Mascotte')}</div></div></section>
+      <div class="setting wrap"><div class="grow"><b>Tema</b><span>Colori dell’app</span></div>${seg('theme', [['auto', 'Automatico'], ['light', 'Chiaro'], ['dark', 'Scuro']], set.theme, 'Tema')}</div></div></section>
     <section class="sec"><h2 class="sec-title">App e dati</h2><div class="card flush">
       ${sw('online', 'Collegamenti a Wikipedia', 'Facoltativi, nel glossario: si apre la voce in italiano', set.online)}
       <div class="setting"><div class="grow"><b>Installa l’app</b><span>${isStandalone() ? 'Elektron è già installata.' : 'Sul telefono funziona anche senza rete.'}</span></div><button class="btn small ghost" data-act="install" ${isStandalone() ? 'disabled' : ''}>Installa</button></div>
@@ -381,7 +379,7 @@ function drawOnb() {
   const dots = `<div class="steps-dots" aria-hidden="true">${[0, 1, 2].map((i) => `<i class="${i <= onb.step ? 'on' : ''}"></i>`).join('')}</div>`;
   let h = `<div class="onb">${dots}<p class="sr">Passo ${onb.step + 1} di 3</p>`;
   if (onb.step === 0) {
-    h += `<div class="onb-hero">${guide('esultante', 150)}<h1>ELEKTRON</h1><p>${esc(G.intro(S.settings.mascot))}</p></div>
+    h += `<div class="onb-hero">${guide('esultante', 150)}<h1>ELEKTRON</h1><p>${esc(G.INTRO)}</p></div>
       <div class="card field"><label for="nm">Come ti chiami? <span class="muted">(facoltativo)</span></label><input id="nm" class="typed" maxlength="16" autocomplete="off" value="${esc(onb.name)}" placeholder="Nome o soprannome"><p class="note">Tutto resta su questo dispositivo: nessun account, nessun dato inviato a nessuno.</p></div>
       <button class="btn big block" data-act="onbNext">Cominciamo</button>
       <button class="linkbtn" data-act="restoreSheet">Hai già usato Elektron? Ripristina i progressi</button>`;

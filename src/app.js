@@ -53,8 +53,6 @@ const ACT = {
   },
   goal: (el) => { S.goal = +el.dataset.v; save(); rerenderKeep(`[data-act="goal"][data-v="${el.dataset.v}"]`); },
   theme: (el) => { S.settings.theme = el.dataset.v; save(); applyTheme(); rerenderKeep(`[data-act="theme"][data-v="${el.dataset.v}"]`); },
-  palette: (el) => { S.settings.palette = el.dataset.v; save(); applyTheme(); rerenderKeep(`[data-act="palette"][data-v="${el.dataset.v}"]`); },
-  mascot: (el) => { S.settings.mascot = el.dataset.v; save(); rerenderKeep(`[data-act="mascot"][data-v="${el.dataset.v}"]`); },
   install: () => installFlow(),
   rename: () => askText('Il tuo nome (facoltativo)', S.name, (n) => { S.name = String(n).trim().slice(0, 16); save(); render(); }),
   saveCode: () => { S.backupAt = Date.now(); save(); codeSheet('save'); },
@@ -75,7 +73,7 @@ const ACT = {
   },
   export: () => { const blob = new Blob([JSON.stringify(S)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'elektron-progressi-' + dayKey() + '.json'; S.backupAt = Date.now(); save(); document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); toast('Copia scaricata: conservala in un posto sicuro.'); },
   import: () => { const i = document.createElement('input'); i.type = 'file'; i.accept = 'application/json,.json'; i.onchange = () => { const f = i.files[0]; if (!f) return; f.text().then((t) => { let d = null; try { d = JSON.parse(t); } catch (e) { /* non è JSON */ } const err = backupError(d); if (err) toast(err); else applyRestore(d); }); }; i.click(); },
-  reset: () => askConfirm('Cancellare tutti i progressi da questo dispositivo?', 'Cancella', () => { try { localStorage.removeItem(KEY); } catch (e) { /* ignora */ } const keep = S.settings; S = DEFAULT(); S.settings.palette = keep.palette; S.settings.mascot = keep.mascot; onb = null; applyTheme(); render(); }, true, 'triste'),
+  reset: () => askConfirm('Cancellare tutti i progressi da questo dispositivo?', 'Cancella', () => { try { localStorage.removeItem(KEY); } catch (e) { /* ignora */ } S = DEFAULT(); onb = null; applyTheme(); render(); }, true, 'triste'),
   onbNext: () => { if (onb.step === 0) onb.name = ($('#nm').value || '').trim().slice(0, 16); onb.step++; drawOnb(); },
   onbBack: () => { onb.step--; drawOnb(); },
   onbCls: (el) => { onb.cls = +el.dataset.v; if (onb.place && UNITS[unitIdx(onb.place)].cls > onb.cls) onb.place = ''; drawOnb(); const b = $(`[data-act="onbCls"][data-v="${onb.cls}"]`); if (b) b.focus(); },
@@ -129,7 +127,7 @@ document.addEventListener('input', (ev) => {
 window.addEventListener('scroll', () => updateJump(), { passive: true });
 
 /* ---------- Avvio ---------- */
-// anteprima per le prove e le schermate: #demo=12&view=gym&theme=dark&pal=ardesia&mas=b (stato dimostrativo, mai salvato)
+// anteprima per le prove e le schermate: #demo=12&view=gym&theme=dark (stato dimostrativo, mai salvato)
 const HASH = Object.fromEntries(location.hash.slice(1).split('&').filter(Boolean).map((kv) => kv.split('=')));
 function demoState(n) {
   const today = dayKey();
@@ -149,8 +147,6 @@ function boot() {
   else if (HASH.onb != null) { NOSAVE = true; onb = { step: Math.min(2, +HASH.onb || 0), name: '', cls: 3, place: '', goal: 50 }; }
   else load();
   if (NOSAVE && HASH.theme) S.settings.theme = HASH.theme;
-  if (HASH.pal && PALETTES.includes(HASH.pal)) S.settings.palette = HASH.pal;
-  if (HASH.mas && G.CHOICES.some((c) => c.id === HASH.mas)) S.settings.mascot = HASH.mas;
   try { if (!NOSAVE && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { /* ignora */ }
   applyTheme();
   const mq = matchMedia('(prefers-color-scheme: dark)');

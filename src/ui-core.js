@@ -60,20 +60,19 @@ const I = {
 const MARK = '<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 16h9M19 16h9M16 4v9" fill="none" stroke="var(--pri)" stroke-width="3.2" stroke-linecap="round"/><circle cx="16" cy="16" r="5.2" fill="var(--acc)"/></svg>';
 
 /* ---------- La guida ---------- */
-const guide = (mood = 'normale', size = 96) => G.svg(mood, size, S.settings.mascot);
+const guide = (mood = 'normale', size = 96) => G.svg(mood, size);
 const say = (text, mood = 'normale', size = 72) => `<div class="say">${guide(mood, size)}<div class="bubble">${text}</div></div>`;
 
 /* ---------- Stato ---------- */
 // le chiavi del dispositivo iniziano con «elektron.»: sullo stesso dominio ci sono altre app
 const KEY = 'elektron.v1';
-const PALETTES = ['rame', 'ardesia', 'viola'];
 const DEFAULT = () => ({
   v: 1, onboarded: false, name: '', goal: 50, xp: 0, days: {}, streak: 0, lastDay: null, fuses: 0,
   badges: {}, mistakes: [], glossary: {}, recent: [], backupAt: 0, savedAt: 0, nudgedAt: 0,
   course: { unlocked: 0, stars: {}, times: {} },
   prac: { level: 2, onlyDone: true, category: 'tutti', unit: null },
   stats: { lessons: 0, answered: 0, correct: 0, calc: 0, faults: 0, minimal: 0, sessions: 0, perfect: 0, clearedReview: 0 },
-  settings: { sound: true, keypad: true, online: true, theme: 'auto', palette: 'rame', mascot: 'a' },
+  settings: { sound: true, keypad: true, online: true, theme: 'auto' },
 });
 let S = DEFAULT();
 function merge(d) {
@@ -88,9 +87,8 @@ function save() { S.savedAt = Date.now(); if (NOSAVE) return; try { localStorage
 function applyTheme() {
   const r = document.documentElement;
   if (S.settings.theme === 'auto') r.removeAttribute('data-theme'); else r.setAttribute('data-theme', S.settings.theme);
-  r.setAttribute('data-palette', PALETTES.includes(S.settings.palette) ? S.settings.palette : 'rame');
   const m = $('meta[name="theme-color"]');
-  if (m) m.content = getComputedStyle(r).getPropertyValue('--bg').trim() || '#F5F2EC';
+  if (m) m.content = getComputedStyle(r).getPropertyValue('--bg').trim() || '#F1F3F5';
 }
 
 /* ---------- Percorso: sblocchi ---------- */

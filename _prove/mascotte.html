@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Elektron: proposte di mascotte</title>
+<title>Elektron: la mascotte Erre</title>
 <link rel="stylesheet" href="prove.css">
 <style>
   .m-row { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; padding: 12px; border-radius: 12px; }
@@ -12,17 +12,14 @@
 </style>
 </head>
 <body>
-<h1>Le tre proposte di mascotte</h1>
+<h1>Erre, la guida di Elektron</h1>
 <p>Cinque espressioni a 120 px e il busto a 48 px (sotto i 64 px), su fondo chiaro e scuro. Pagina di prova: non fa parte del sito.</p>
 <div id="g"></div>
 <script src="../src/guide.js"></script>
 <script>
 const G = window.ELEK_GUIDE;
 let h = '';
-for (const c of G.CHOICES) {
-  h += `<h2>${c.id} · ${c.name}</h2><p>${c.desc}</p>`;
-  for (const bg of ['light', 'dark']) h += `<div class="m-row ${bg}">${G.MOODS.map((m) => `<figure>${G.svg(m, 120, c.id)}<figcaption>${m}</figcaption></figure>`).join('')}<figure>${G.svg('contenta', 48, c.id)}<figcaption>busto</figcaption></figure></div>`;
-}
+for (const bg of ['light', 'dark']) h += `<div class="m-row ${bg}">${G.MOODS.map((m) => `<figure>${G.svg(m, 120)}<figcaption>${m}</figcaption></figure>`).join('')}${[52, 48, 32].map((s) => `<figure>${G.svg('contenta', s)}<figcaption>busto ${s} px</figcaption></figure>`).join('')}</div>`;
 document.getElementById('g').innerHTML = h;
 </script>
 </body>
