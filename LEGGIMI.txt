@@ -1,4 +1,4 @@
-ELEKTRON — pacchetto per la pubblicazione (versione 99a5199e75)
+ELEKTRON — pacchetto per la pubblicazione (versione 4e30ae72ae)
 
 Contenuto
   index.html             l'applicazione completa (caratteri e formule incorporati)

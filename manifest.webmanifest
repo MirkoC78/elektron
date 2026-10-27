@@ -2,7 +2,7 @@
   "name": "Elektron: elettronica per l’istituto tecnico",
   "short_name": "Elektron",
   "description": "Corso guidato di elettronica: lezioni, problemi con lo svolgimento, laboratorio virtuale, teoria e glossario.",
-  "id": "./",
+  "id": "elektron",
   "lang": "it",
   "dir": "ltr",
   "start_url": "./",
