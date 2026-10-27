@@ -39,6 +39,12 @@ const server = http.createServer((req, res) => {
   if (!info.caches.includes('verto@/verto/@prova')) errs.push('la cache di Verto è sparita');
   if (info.icons.some((s) => s !== 200)) errs.push('icone mancanti: ' + info.icons.join(','));
   if (info.manifest.scope !== './' || info.manifest.start_url !== './') errs.push('manifest: percorsi non relativi');
+  // identità dell'app come la calcola il browser: «id» si risolve rispetto all'origine di start_url (la radice del dominio),
+  // quindi deve contenere il nome dell'app, altrimenti coincide con quella delle altre app del dominio
+  const origin = new URL(base).origin;
+  const appId = new URL(info.manifest.id || info.manifest.start_url, info.manifest.id ? origin + '/' : base).href;
+  if (appId !== origin + '/elektron') errs.push(`identità dell’app ${appId}: deve essere ${origin}/elektron, diversa da quella di Verto e Hermeneus`);
+  console.log(`  Identità dell’app (id del manifest): ${appId}`);
   // senza rete: si ricarica dalla cache
   online = false;
   await p.goto(base + '?v=senza-rete#onb=0');

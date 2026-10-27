@@ -34,7 +34,8 @@ const css = ['src/app.css', 'src/sch.css'].filter((m) => fs.existsSync(path.join
 const ASSETS_DIR = path.join(ROOT, 'assets');
 const hasIcons = fs.existsSync(path.join(ASSETS_DIR, 'icon-192.png'));
 const png = (f) => 'data:image/png;base64,' + fs.readFileSync(path.join(ASSETS_DIR, f)).toString('base64');
-const hash = crypto.createHash('sha256').update(code + css + fontCSS);
+// anche questo file entra nella versione: un cambio del manifest o del service worker deve arrivare a chi ha già l'app
+const hash = crypto.createHash('sha256').update(code + css + fontCSS + r('build.js'));
 if (hasIcons) for (const f of fs.readdirSync(ASSETS_DIR).sort()) hash.update(fs.readFileSync(path.join(ASSETS_DIR, f)));
 const version = hash.digest('hex').slice(0, 10);
 const THEME = '#F1F3F5';
@@ -87,7 +88,9 @@ if (hasIcons) for (const f of fs.readdirSync(ASSETS_DIR)) fs.copyFileSync(path.j
 fs.copyFileSync(path.join(ROOT, 'fonts', 'LICENZE-CARATTERI.txt'), path.join(SITE, 'LICENZE-CARATTERI.txt'));
 fs.writeFileSync(path.join(SITE, 'manifest.webmanifest'), JSON.stringify({
   name: 'Elektron: elettronica per l’istituto tecnico', short_name: 'Elektron', description: 'Corso guidato di elettronica: lezioni, problemi con lo svolgimento, laboratorio virtuale, teoria e glossario.',
-  id: './', lang: 'it', dir: 'ltr', start_url: './', scope: './', display: 'standalone', orientation: 'portrait',
+  // l'identità dell'app si risolve rispetto alla radice del dominio, non alla cartella: con «./» tutte le app
+  // di mirkoc78.github.io avrebbero la stessa (e il telefono direbbe «app già installata»). Ci vuole il nome.
+  id: 'elektron', lang: 'it', dir: 'ltr', start_url: './', scope: './', display: 'standalone', orientation: 'portrait',
   background_color: THEME, theme_color: THEME, categories: ['education'],
   icons: [
     { src: './icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
